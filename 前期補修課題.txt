@@ -1,0 +1,87 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define BOARD_SIZE 13
+#define WALL  '*'
+#define BLACK 'x'
+#define WHITE 'o'
+#define NONE  ' '
+
+char board[ BOARD_SIZE+2 ][ BOARD_SIZE+2 ] ;
+
+/* プロトタイプ宣言 */
+void board_initialize( void ) ;
+void board_print( void ) ;
+
+void board_initialize() {
+    int i , j ;
+    /* 周囲を壁で囲む */ 
+    for( i = 0 ; i < BOARD_SIZE+2 ; i++ ) {
+        board[ 0            ][ i ] = WALL ;
+        board[ BOARD_SIZE+1 ][ i ] = WALL ;
+        board[ i ][ 0            ] = WALL ;
+        board[ i ][ BOARD_SIZE+1 ] = WALL ;
+    }
+    /* 内部を何もない状態にする */
+    for( i = 1 ; i <= BOARD_SIZE ; i++ ) {
+        for( j = 1 ; j <= BOARD_SIZE ; j++ ) {
+            board[ i ][ j ] = NONE ;
+        }
+    }
+    /* 最初の１手 */
+    /*
+    board[ BOARD_SIZE/2+1 ][ BOARD_SIZE/2+1 ] = BLACK ;
+    */
+}
+
+void board_print() {
+    int i , j ;
+    printf( "   " ) ;
+    for( i = 1 ; i <= BOARD_SIZE ; i++ )
+        printf( "%2d" , i ) ;
+    printf( "\n" ) ;
+    for( j = 1 ; j <= BOARD_SIZE ; j++ ) {
+        printf( "%2d:" , j ) ;
+        for( i = 1 ; i <= BOARD_SIZE ; i++ ) {
+            switch( board[ j ][ i ] ) {
+            case WALL  : printf( "■" ) ; break ;
+            case BLACK : printf( "●" ) ; break ;
+            case WHITE : printf( "○" ) ; break ;
+            case NONE  : printf( "＋" ) ; break ;
+            }
+        }
+        printf( "\n" ) ;
+    }
+}
+
+int main() {
+
+    int   x , y ;
+    char  obj = BLACK ;
+
+    board_initialize() ;         /* ボード初期化 */
+
+    for(;;) {
+        board_print() ;          /* 盤面表示 */
+
+        if ( obj == BLACK )      /* 場所入力 */
+            printf( "●の番:" ) ;
+        else
+            printf( "○の番:" ) ;
+        scanf( "%d%d" , &x , &y ) ;
+
+        if ( x == 0 && y == 0 )  /* 終了判定 */
+            break ;
+
+        board[ x ][ y ] = obj ;  /* 盤面に駒を打つ */
+
+        if ( obj == BLACK )      /* 手を交替 */
+            obj = WHITE ;
+        else
+            obj = BLACK ;
+    }
+
+    return 0 ;
+}
+
